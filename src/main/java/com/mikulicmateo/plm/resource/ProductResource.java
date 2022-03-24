@@ -34,4 +34,23 @@ public class ProductResource {
         ResponseMessageDto responseMessageDto = productService.updateProduct(id, productDto);
         return new ResponseEntity<>(responseMessageDto, HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete-id/{id}")
+    public ResponseEntity<ResponseMessageDto> updateProduct(@PathVariable long id){
+        ResponseMessageDto responseMessageDto = productService.deleteProductById(id);
+        if(responseMessageDto.isSuccess()){
+            return new ResponseEntity<>(responseMessageDto, HttpStatus.OK);
+        }else return new ResponseEntity<>(responseMessageDto, HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/delete-code/{code}")
+    public ResponseEntity<ResponseMessageDto> updateProduct(@PathVariable String code){
+        ResponseMessageDto responseMessageDto = productService.deleteProductByCode(code);
+        if(responseMessageDto.isSuccess()){
+            return new ResponseEntity<>(responseMessageDto, HttpStatus.OK);
+        }else return new ResponseEntity<>(responseMessageDto, HttpStatus.NOT_FOUND);
+    }
+
+
+
 }

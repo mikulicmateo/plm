@@ -3,12 +3,15 @@ package com.mikulicmateo.plm.service;
 import com.mikulicmateo.plm.dto.request.RequestProductDto;
 import com.mikulicmateo.plm.dto.response.ResponseMessageDto;
 import com.mikulicmateo.plm.entity.Product;
+import com.mikulicmateo.plm.exception.ResponseException;
 import com.mikulicmateo.plm.mapper.ProductMapper;
 import com.mikulicmateo.plm.repository.ProductRepository;
 import com.mikulicmateo.plm.util.CurrencyClient;
 import com.mikulicmateo.plm.util.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -67,4 +70,26 @@ public class ProductService {
         return product;
     }
 
+    @Transactional
+    public ResponseMessageDto deleteProductById(long id) {
+        if(id == 0) return new ResponseMessageDto(false,"Please give valid ID.");
+        try {
+            productRepository.deleteById(id);
+        }catch (UnexpectedRollbackException ex){
+            return new ResponseMessageDto(false,"Unable to delete non-existing product.");
+        }
+        return new ResponseMessageDto(true, "Product successfully deleted.");
+    }
+
+    @Transactional
+    public ResponseMessageDto deleteProductByCode(String code) {
+        if(code.length() != 10){
+            return new ResponseMessageDto(false, "Please specify valid product code.");
+        }
+        long rowsDeleted = productRepository.deleteByCode(code);
+        if(rowsDeleted == 0){
+            return new ResponseMessageDto(false, "Please specify product code for existing product.");
+        }
+        return new ResponseMessageDto(true, "Product successfully deleted");
+    }
 }
