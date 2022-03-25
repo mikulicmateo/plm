@@ -1,7 +1,9 @@
 package com.mikulicmateo.plm.resource;
 
 import com.mikulicmateo.plm.dto.request.RequestProductDto;
+import com.mikulicmateo.plm.dto.response.ResponseContainer;
 import com.mikulicmateo.plm.dto.response.ResponseMessageDto;
+import com.mikulicmateo.plm.dto.response.ResponseProductDto;
 import com.mikulicmateo.plm.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,6 +53,21 @@ public class ProductResource {
         }else return new ResponseEntity<>(responseMessageDto, HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/get-id/{id}")
+    public ResponseEntity<ResponseProductDto> getProductById(@PathVariable long id){
+        ResponseContainer responseContainer = productService.getProductById(id);
+        if(responseContainer.isSuccess()){
+            return new ResponseEntity<>(responseContainer.getProductDto(), HttpStatus.OK);
+        }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/get-code/{code}")
+    public ResponseEntity<ResponseProductDto> getProductByCode(@PathVariable String code){
+        ResponseContainer responseContainer = productService.getProductByCode(code);
+        if(responseContainer.isSuccess()){
+            return new ResponseEntity<>(responseContainer.getProductDto(), HttpStatus.OK);
+        }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
 
 }
