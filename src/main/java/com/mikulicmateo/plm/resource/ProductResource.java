@@ -1,11 +1,13 @@
 package com.mikulicmateo.plm.resource;
 
+import com.mikulicmateo.plm.dto.request.PageRequestDto;
 import com.mikulicmateo.plm.dto.request.RequestProductDto;
 import com.mikulicmateo.plm.dto.response.ResponseContainer;
 import com.mikulicmateo.plm.dto.response.ResponseMessageDto;
 import com.mikulicmateo.plm.dto.response.ResponseProductDto;
 import com.mikulicmateo.plm.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +69,11 @@ public class ProductResource {
         if(responseContainer.isSuccess()){
             return new ResponseEntity<>(responseContainer.getProductDto(), HttpStatus.OK);
         }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/get-name/{name}")
+    public ResponseEntity<Page<ResponseProductDto>> getProductsByName(@PathVariable String name, @RequestBody PageRequestDto requestDto){
+        return new ResponseEntity<>(productService.getProductsByName(name, requestDto), HttpStatus.OK);
     }
 
 

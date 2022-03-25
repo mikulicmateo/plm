@@ -1,15 +1,20 @@
 package com.mikulicmateo.plm.service;
 
+import com.mikulicmateo.plm.dto.request.PageRequestDto;
 import com.mikulicmateo.plm.dto.request.RequestProductDto;
 import com.mikulicmateo.plm.dto.response.ResponseContainer;
 import com.mikulicmateo.plm.dto.response.ResponseMessageDto;
 import com.mikulicmateo.plm.dto.response.ResponseProductDto;
 import com.mikulicmateo.plm.entity.Product;
+import com.mikulicmateo.plm.exception.ResponseException;
 import com.mikulicmateo.plm.mapper.ProductMapper;
+import com.mikulicmateo.plm.pageable.LimitOffsetPageable;
 import com.mikulicmateo.plm.repository.ProductRepository;
 import com.mikulicmateo.plm.util.CurrencyClient;
 import com.mikulicmateo.plm.util.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,5 +128,10 @@ public class ProductService {
         ResponseProductDto productDto = productMapper.productToResponseProductDto(maybeProduct.get());
 
         return new ResponseContainer(true, productDto);
+    }
+
+    public Page<ResponseProductDto> getProductsByName(String name, PageRequestDto requestDto) {
+        Page<Product> products = productRepository.findByNameContainingOrderByNameAsc(name, new LimitOffsetPageable(requestDto.getLimit(), requestDto.getOffset()));
+        return products.map(productMapper::productToResponseProductDto);
     }
 }
