@@ -5,7 +5,6 @@ import com.mikulicmateo.plm.dto.response.ResponseProductDto;
 import com.mikulicmateo.plm.entity.Product;
 import com.mikulicmateo.plm.util.CurrencyClient;
 import org.mapstruct.*;
-import org.springframework.data.domain.Page;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
