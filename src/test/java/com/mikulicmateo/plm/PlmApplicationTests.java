@@ -88,6 +88,72 @@ class PlmApplicationTests {
 
     @Test
     @Order(2)
+    void saveExists() throws Exception {
+        RequestProductDto productDto = new RequestProductDto("0123456789", "potato", 7.5, "Krumpir", true);
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/save")
+                        .content(objectMapper.writeValueAsString(productDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Product already exists."))
+                .andDo(print());
+    }
+
+    @Test
+    @Order(3)
+    void saveBadCode() throws Exception {
+        RequestProductDto productDto = new RequestProductDto("01234567891", "potato", 7.5, "Krumpir", true);
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/save")
+                        .content(objectMapper.writeValueAsString(productDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Product not correctly defined."))
+                .andDo(print());
+    }
+
+    @Test
+    @Order(4)
+    void saveNotCorrectlyDefined() throws Exception {
+        RequestProductDto productDto = new RequestProductDto("1123456789", null, 7.5, "Krumpir", true);
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/save")
+                        .content(objectMapper.writeValueAsString(productDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Product not correctly defined."))
+                .andDo(print());
+    }
+
+    @Test
+    @Order(5)
+    void updateOk() throws Exception {
+        RequestProductDto productDto = new RequestProductDto("0123456789", "krumpir", -1, "potato", true);
+        mockMvc.perform(MockMvcRequestBuilders.put("/update/1")
+                        .content(objectMapper.writeValueAsString(productDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("Product successfully updated."))
+                .andDo(print());
+    }
+
+
+
+    @Test
+    @Order(6)
     void getByCodeOk() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/product/get-code/0123456789"))
                 .andExpect(jsonPath("$.code").value("0123456789"))
