@@ -9,6 +9,7 @@ import com.mikulicmateo.plm.entity.Product;
 import com.mikulicmateo.plm.mapper.ProductMapper;
 import com.mikulicmateo.plm.pageable.LimitOffsetPageable;
 import com.mikulicmateo.plm.repository.ProductRepository;
+import com.mikulicmateo.plm.util.ConfigProps;
 import com.mikulicmateo.plm.util.CurrencyClient;
 import com.mikulicmateo.plm.util.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,13 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final ConfigProps configProps;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper, ConfigProps configProps) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.configProps = configProps;
     }
 
     @Transactional
@@ -39,7 +42,7 @@ public class ProductService {
                 return new ResponseMessageDto(false, "Product already exists.");
             }
 
-            Product product = productMapper.requestProductDtoToProduct(productDto);
+            Product product = productMapper.requestProductDtoToProduct(productDto, configProps);
             productRepository.save(product);
 
             return new ResponseMessageDto(true, "Product saved succesfully.");
@@ -69,7 +72,7 @@ public class ProductService {
         product.setCode(productDto.getCode());
         product.setName(productDto.getName());
         product.setPriceHrk(productDto.getPriceHrk());
-        product.setPriceEur(productDto.getPriceHrk() / CurrencyClient.getEurCurrency());
+        product.setPriceEur(productDto.getPriceHrk() / CurrencyClient.getEurCurrency(configProps.getHostname(), configProps.getPath()));
         product.setDescription(productDto.getDescription());
         product.setAvailable(productDto.isAvailable());
         return product;

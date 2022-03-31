@@ -14,11 +14,10 @@ import java.text.ParseException;
 public class CurrencyClient {
 
     private static final RestTemplate restTemplate = new RestTemplate();
-    private static final String eurUrl = "https://api.hnb.hr/tecajn/v1?valuta=EUR";
     private static final ObjectMapper objectMapper  = new ObjectMapper();
 
-    public static double getEurCurrency() {
-        ResponseEntity<String> response = restTemplate.getForEntity(eurUrl, String.class);
+    public static double getEurCurrency(String hostname, String path) {
+        ResponseEntity<String> response = restTemplate.getForEntity(hostname + path, String.class);
 
         if(!response.getStatusCode().is2xxSuccessful()){
             throw new ResponseException("Unable to get currency.");
