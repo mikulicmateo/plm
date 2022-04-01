@@ -17,6 +17,7 @@
         <java.version>11</java.version>
         <org.projectlombok.version>1.18.22</org.projectlombok.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+        <wiremock.version>2.32.0</wiremock.version>
     </properties>
     <dependencies>
         <dependency>
@@ -48,6 +49,17 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-jre8</artifactId>
+            <version>${wiremock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
