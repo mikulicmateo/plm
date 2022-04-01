@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.persistence.EntityNotFoundException;
+
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class ProductResourceExceptionHandler {
@@ -23,6 +25,11 @@ public class ProductResourceExceptionHandler {
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     protected ResponseEntity<?> handleNoDbDataException(Exception exception, WebRequest request){
+        return new ResponseEntity<>(new ResponseMessageDto(false, "Product does not exist."), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    protected ResponseEntity<?> handleNoDbDataNotFoundException(Exception exception, WebRequest request){
         return new ResponseEntity<>(new ResponseMessageDto(false, "Product does not exist."), HttpStatus.NOT_FOUND);
     }
 
