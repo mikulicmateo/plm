@@ -1,0 +1,1 @@
+INSERT INTO product(id, code, name, price_hrk, price_eur, description, is_available) VALUES (1, '1234567890', 'Banana', 7.5, 1, 'Zakrivljena', true)
